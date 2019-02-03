@@ -131,6 +131,28 @@ public class DatabaseMask implements Mask<DatabaseMask> {
     return this;
   }
 
+  protected boolean dbdpc0 = false;
+
+  public boolean getDbdpc0() {
+    return dbdpc0;
+  }
+
+  public DatabaseMask setDbdpc0(boolean dbdpc0) {
+    this.dbdpc0 = dbdpc0;
+    return this;
+  }
+
+  protected boolean dbdpc1 = false;
+
+  public boolean getDbdpc1() {
+    return dbdpc1;
+  }
+
+  public DatabaseMask setDbdpc1(boolean dbdpc1) {
+    this.dbdpc1 = dbdpc1;
+    return this;
+  }
+
   public DatabaseMask(
       boolean dbid,
       boolean dbname,
@@ -142,7 +164,9 @@ public class DatabaseMask implements Mask<DatabaseMask> {
       boolean dbmanagername,
       boolean dbspeakername,
       boolean dbdpstatus,
-      boolean dbdpc) {
+      boolean dbdpc,
+      boolean dbdpc0,
+      boolean dbdpc1) {
     this.dbid = dbid;
     this.dbname = dbname;
     this.dbstatus = dbstatus;
@@ -154,6 +178,8 @@ public class DatabaseMask implements Mask<DatabaseMask> {
     this.dbspeakername = dbspeakername;
     this.dbdpstatus = dbdpstatus;
     this.dbdpc = dbdpc;
+    this.dbdpc0 = dbdpc0;
+    this.dbdpc1 = dbdpc1;
   }
 
   public DatabaseMask() {}
@@ -171,6 +197,8 @@ public class DatabaseMask implements Mask<DatabaseMask> {
     this.dbspeakername = b;
     this.dbdpstatus = b;
     this.dbdpc = b;
+    this.dbdpc0 = b;
+    this.dbdpc1 = b;
     return this;
   }
 
@@ -209,6 +237,8 @@ public class DatabaseMask implements Mask<DatabaseMask> {
     this.dbspeakername = b;
     this.dbdpstatus = b;
     this.dbdpc = b;
+    this.dbdpc0 = b;
+    this.dbdpc1 = b;
     return this;
   }
 
@@ -225,6 +255,8 @@ public class DatabaseMask implements Mask<DatabaseMask> {
     else if (p.equals("dbspeakername")) return dbspeakername;
     else if (p.equals("dbdpstatus")) return dbdpstatus;
     else if (p.equals("dbdpc")) return dbdpc;
+    else if (p.equals("dbdpc0")) return dbdpc0;
+    else if (p.equals("dbdpc1")) return dbdpc1;
     return false;
   }
 
@@ -241,6 +273,8 @@ public class DatabaseMask implements Mask<DatabaseMask> {
     else if (p.equals("dbspeakername")) this.dbspeakername = b;
     else if (p.equals("dbdpstatus")) this.dbdpstatus = b;
     else if (p.equals("dbdpc")) this.dbdpc = b;
+    else if (p.equals("dbdpc0")) this.dbdpc0 = b;
+    else if (p.equals("dbdpc1")) this.dbdpc1 = b;
     return this;
   }
 
@@ -292,6 +326,14 @@ public class DatabaseMask implements Mask<DatabaseMask> {
       if (value.getDbdpc()) {
         gen.writeFieldName("dbdpc");
         gen.writeBoolean(value.getDbdpc());
+      }
+      if (value.getDbdpc0()) {
+        gen.writeFieldName("dbdpc0");
+        gen.writeBoolean(value.getDbdpc0());
+      }
+      if (value.getDbdpc1()) {
+        gen.writeFieldName("dbdpc1");
+        gen.writeBoolean(value.getDbdpc1());
       }
       gen.writeEndObject();
     }

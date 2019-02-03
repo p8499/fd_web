@@ -201,6 +201,36 @@ public class Database {
   }
   //endregion
 
+  //region dbdpc0 Diphones Count Status 0
+  public static final String FIELD_DBDPC0 = "DBDPC0";
+  protected Integer dbdpc0 = null;
+
+  @javax.validation.constraints.Null(groups = {Insert.class, Update.class})
+  public Integer getDbdpc0() {
+    return dbdpc0;
+  }
+
+  public Database setDbdpc0(Integer dbdpc0) {
+    this.dbdpc0 = dbdpc0;
+    return this;
+  }
+  //endregion
+
+  //region dbdpc1 Diphones Count Status 1
+  public static final String FIELD_DBDPC1 = "DBDPC1";
+  protected Integer dbdpc1 = null;
+
+  @javax.validation.constraints.Null(groups = {Insert.class, Update.class})
+  public Integer getDbdpc1() {
+    return dbdpc1;
+  }
+
+  public Database setDbdpc1(Integer dbdpc1) {
+    this.dbdpc1 = dbdpc1;
+    return this;
+  }
+  //endregion
+
   public Database(
       String dbid,
       String dbname,
@@ -212,7 +242,9 @@ public class Database {
       String dbmanagername,
       String dbspeakername,
       Integer dbdpstatus,
-      Integer dbdpc) {
+      Integer dbdpc,
+      Integer dbdpc0,
+      Integer dbdpc1) {
     if (dbid != null) this.dbid = dbid;
     if (dbname != null) this.dbname = dbname;
     if (dbstatus != null) this.dbstatus = dbstatus;
@@ -224,10 +256,12 @@ public class Database {
     if (dbspeakername != null) this.dbspeakername = dbspeakername;
     if (dbdpstatus != null) this.dbdpstatus = dbdpstatus;
     if (dbdpc != null) this.dbdpc = dbdpc;
+    if (dbdpc0 != null) this.dbdpc0 = dbdpc0;
+    if (dbdpc1 != null) this.dbdpc1 = dbdpc1;
   }
 
   public Database() {
-    this(null, null, null, null, null, null, null, null, null, null, null);
+    this(null, null, null, null, null, null, null, null, null, null, null, null, null);
   }
 
   public Database clone() {
@@ -242,6 +276,8 @@ public class Database {
         dbmanagername,
         dbspeakername,
         dbdpstatus,
-        dbdpc);
+        dbdpc,
+        dbdpc0,
+        dbdpc1);
   }
 }

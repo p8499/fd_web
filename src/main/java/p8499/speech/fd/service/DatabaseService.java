@@ -136,6 +136,26 @@ public class DatabaseService {
     return databaseMapper.maxDbdpc(filter, defaultValue);
   }
 
+  @Transactional(value = "fd_transaction", readOnly = true)
+  public Integer minDbdpc0(FilterExpr filter, Integer defaultValue) {
+    return databaseMapper.minDbdpc0(filter, defaultValue);
+  }
+
+  @Transactional(value = "fd_transaction", readOnly = true)
+  public Integer maxDbdpc0(FilterExpr filter, Integer defaultValue) {
+    return databaseMapper.maxDbdpc0(filter, defaultValue);
+  }
+
+  @Transactional(value = "fd_transaction", readOnly = true)
+  public Integer minDbdpc1(FilterExpr filter, Integer defaultValue) {
+    return databaseMapper.minDbdpc1(filter, defaultValue);
+  }
+
+  @Transactional(value = "fd_transaction", readOnly = true)
+  public Integer maxDbdpc1(FilterExpr filter, Integer defaultValue) {
+    return databaseMapper.maxDbdpc1(filter, defaultValue);
+  }
+
   @Value(value = "#{databaseMapper}")
   protected DatabaseMapper databaseMapper;
 

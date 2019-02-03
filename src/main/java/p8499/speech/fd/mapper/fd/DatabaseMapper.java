@@ -18,7 +18,7 @@ public interface DatabaseMapper {
   boolean exists(@Param("dbid") String dbid);
 
   @Select(
-      "<script><choose><when test='mask!=null'><if test='mask.dbid or mask.dbname or mask.dbstatus or mask.dbmanager or mask.dbspeaker or mask.dborig or mask.dbcrtime or mask.dbmanagername or mask.dbspeakername or mask.dbdpstatus or mask.dbdpc'><trim prefix='SELECT' suffixOverrides=','><if test='mask.dbid'>DBID, </if><if test='mask.dbname'>DBNAME, </if><if test='mask.dbstatus'>DBSTATUS, </if><if test='mask.dbmanager'>DBMANAGER, </if><if test='mask.dbspeaker'>DBSPEAKER, </if><if test='mask.dborig'>DBORIG, </if><if test='mask.dbcrtime'>DBCRTIME, </if><if test='mask.dbmanagername'>DBMANAGERNAME, </if><if test='mask.dbspeakername'>DBSPEAKERNAME, </if><if test='mask.dbdpstatus'>DBDPSTATUS, </if><if test='mask.dbdpc'>DBDPC, </if></trim>FROM F4701View WHERE DBID=#{dbid}</if></when><otherwise>SELECTDBID,DBNAME,DBSTATUS,DBMANAGER,DBSPEAKER,DBORIG,DBCRTIME,DBMANAGERNAME,DBSPEAKERNAME,DBDPSTATUS,DBDPC FROM F4701View WHERE DBID=#{dbid}</otherwise></choose></script>")
+      "<script><choose><when test='mask!=null'><if test='mask.dbid or mask.dbname or mask.dbstatus or mask.dbmanager or mask.dbspeaker or mask.dborig or mask.dbcrtime or mask.dbmanagername or mask.dbspeakername or mask.dbdpstatus or mask.dbdpc or mask.dbdpc0 or mask.dbdpc1'><trim prefix='SELECT' suffixOverrides=','><if test='mask.dbid'>DBID, </if><if test='mask.dbname'>DBNAME, </if><if test='mask.dbstatus'>DBSTATUS, </if><if test='mask.dbmanager'>DBMANAGER, </if><if test='mask.dbspeaker'>DBSPEAKER, </if><if test='mask.dborig'>DBORIG, </if><if test='mask.dbcrtime'>DBCRTIME, </if><if test='mask.dbmanagername'>DBMANAGERNAME, </if><if test='mask.dbspeakername'>DBSPEAKERNAME, </if><if test='mask.dbdpstatus'>DBDPSTATUS, </if><if test='mask.dbdpc'>DBDPC, </if><if test='mask.dbdpc0'>DBDPC0, </if><if test='mask.dbdpc1'>DBDPC1, </if></trim>FROM F4701View WHERE DBID=#{dbid}</if></when><otherwise>SELECTDBID,DBNAME,DBSTATUS,DBMANAGER,DBSPEAKER,DBORIG,DBCRTIME,DBMANAGERNAME,DBSPEAKERNAME,DBDPSTATUS,DBDPC,DBDPC0,DBDPC1 FROM F4701View WHERE DBID=#{dbid}</otherwise></choose></script>")
   Database get(@Param("dbid") String dbid, @Param("mask") DatabaseMask mask);
 
   @Insert(
@@ -37,7 +37,7 @@ public interface DatabaseMapper {
   void deleteWhere(@Param("filter") FilterExpr filter);
 
   @Select(
-      "<script>SELECT A.* FROM (SELECT B.*, ROWNUM B_ROWNUM FROM (<choose><when test='mask!=null'><trim prefix='SELECT' suffixOverrides=','><if test='mask.dbid'>dbid,</if><if test='mask.dbname'>dbname,</if><if test='mask.dbstatus'>dbstatus,</if><if test='mask.dbmanager'>dbmanager,</if><if test='mask.dbspeaker'>dbspeaker,</if><if test='mask.dborig'>dborig,</if><if test='mask.dbcrtime'>dbcrtime,</if><if test='mask.dbmanagername'>dbmanagername,</if><if test='mask.dbspeakername'>dbspeakername,</if><if test='mask.dbdpstatus'>dbdpstatus,</if><if test='mask.dbdpc'>dbdpc,</if></trim></when><otherwise>SELECT dbid, dbname, dbstatus, dbmanager, dbspeaker, dborig, dbcrtime, dbmanagername, dbspeakername, dbdpstatus, dbdpc</otherwise></choose> FROM F4701View<if test='filter!=null'> WHERE ${filter.toStringOracle()}</if><if test='order!=null'> ORDER BY ${order.toString()}</if>) B WHERE ROWNUM &lt;=#{start}+#{count}) A WHERE B_ROWNUM &gt;=#{start}+1</script>")
+      "<script>SELECT A.* FROM (SELECT B.*, ROWNUM B_ROWNUM FROM (<choose><when test='mask!=null'><trim prefix='SELECT' suffixOverrides=','><if test='mask.dbid'>dbid,</if><if test='mask.dbname'>dbname,</if><if test='mask.dbstatus'>dbstatus,</if><if test='mask.dbmanager'>dbmanager,</if><if test='mask.dbspeaker'>dbspeaker,</if><if test='mask.dborig'>dborig,</if><if test='mask.dbcrtime'>dbcrtime,</if><if test='mask.dbmanagername'>dbmanagername,</if><if test='mask.dbspeakername'>dbspeakername,</if><if test='mask.dbdpstatus'>dbdpstatus,</if><if test='mask.dbdpc'>dbdpc,</if><if test='mask.dbdpc0'>dbdpc0,</if><if test='mask.dbdpc1'>dbdpc1,</if></trim></when><otherwise>SELECT dbid, dbname, dbstatus, dbmanager, dbspeaker, dborig, dbcrtime, dbmanagername, dbspeakername, dbdpstatus, dbdpc, dbdpc0, dbdpc1</otherwise></choose> FROM F4701View<if test='filter!=null'> WHERE ${filter.toStringOracle()}</if><if test='order!=null'> ORDER BY ${order.toString()}</if>) B WHERE ROWNUM &lt;=#{start}+#{count}) A WHERE B_ROWNUM &gt;=#{start}+1</script>")
   List<Database> query(
       @Param("filter") FilterExpr filter,
       @Param("order") OrderByListExpr order,
@@ -116,4 +116,24 @@ public interface DatabaseMapper {
   @Select(
       "<script>SELECT DECODE(MAX(DBDPC),NULL,${defaultValue}) FROM F4701View<if test='filter!=null'> WHERE ${filter.toStringOracle()}</if></script>")
   Integer maxDbdpc(@Param("filter") FilterExpr filter, @Param("defaultValue") Integer defaultValue);
+
+  @Select(
+      "<script>SELECT DECODE(MIN(DBDPC0),NULL,${defaultValue}) FROM F4701View<if test='filter!=null'> WHERE ${filter.toStringOracle()}</if></script>")
+  Integer minDbdpc0(
+      @Param("filter") FilterExpr filter, @Param("defaultValue") Integer defaultValue);
+
+  @Select(
+      "<script>SELECT DECODE(MAX(DBDPC0),NULL,${defaultValue}) FROM F4701View<if test='filter!=null'> WHERE ${filter.toStringOracle()}</if></script>")
+  Integer maxDbdpc0(
+      @Param("filter") FilterExpr filter, @Param("defaultValue") Integer defaultValue);
+
+  @Select(
+      "<script>SELECT DECODE(MIN(DBDPC1),NULL,${defaultValue}) FROM F4701View<if test='filter!=null'> WHERE ${filter.toStringOracle()}</if></script>")
+  Integer minDbdpc1(
+      @Param("filter") FilterExpr filter, @Param("defaultValue") Integer defaultValue);
+
+  @Select(
+      "<script>SELECT DECODE(MAX(DBDPC1),NULL,${defaultValue}) FROM F4701View<if test='filter!=null'> WHERE ${filter.toStringOracle()}</if></script>")
+  Integer maxDbdpc1(
+      @Param("filter") FilterExpr filter, @Param("defaultValue") Integer defaultValue);
 }
