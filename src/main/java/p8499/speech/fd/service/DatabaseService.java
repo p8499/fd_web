@@ -18,7 +18,7 @@ import java.util.Set;
 @Service("databaseService")
 public class DatabaseService {
   @Transactional(value = "fd_transaction", readOnly = true)
-  public Database get(String dbid, DatabaseMask mask) {
+  public Database get(Integer dbid, DatabaseMask mask) {
     return databaseMapper.get(dbid, mask);
   }
 
@@ -41,7 +41,7 @@ public class DatabaseService {
     return bean;
   }
 
-  public boolean delete(String dbid) {
+  public boolean delete(Integer dbid) {
     return databaseMapper.delete(dbid);
   }
 
@@ -62,8 +62,18 @@ public class DatabaseService {
   }
 
   @Transactional(value = "fd_transaction", readOnly = true)
-  public boolean exists(String dbid) {
+  public boolean exists(Integer dbid) {
     return databaseMapper.exists(dbid);
+  }
+
+  @Transactional(value = "fd_transaction", readOnly = true)
+  public Integer minDbid(FilterExpr filter, Integer defaultValue) {
+    return databaseMapper.minDbid(filter, defaultValue);
+  }
+
+  @Transactional(value = "fd_transaction", readOnly = true)
+  public Integer maxDbid(FilterExpr filter, Integer defaultValue) {
+    return databaseMapper.maxDbid(filter, defaultValue);
   }
 
   @Transactional(value = "fd_transaction", readOnly = true)

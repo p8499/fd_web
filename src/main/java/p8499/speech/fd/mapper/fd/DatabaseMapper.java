@@ -15,14 +15,21 @@ import p8499.speech.fd.bean.Database;
 @Component("databaseMapper")
 public interface DatabaseMapper {
   @Select("SELECT COUNT(*)>0 FROM F4701View WHERE DBID=#{dbid}")
-  boolean exists(@Param("dbid") String dbid);
+  boolean exists(@Param("dbid") Integer dbid);
 
   @Select(
       "<script><choose><when test='mask!=null'><if test='mask.dbid or mask.dbname or mask.dbstatus or mask.dbmanager or mask.dbspeaker or mask.dborig or mask.dbcrtime or mask.dbmanagername or mask.dbspeakername or mask.dbdpstatus or mask.dbdpc or mask.dbdpc0 or mask.dbdpc1'><trim prefix='SELECT' suffixOverrides=','><if test='mask.dbid'>DBID, </if><if test='mask.dbname'>DBNAME, </if><if test='mask.dbstatus'>DBSTATUS, </if><if test='mask.dbmanager'>DBMANAGER, </if><if test='mask.dbspeaker'>DBSPEAKER, </if><if test='mask.dborig'>DBORIG, </if><if test='mask.dbcrtime'>DBCRTIME, </if><if test='mask.dbmanagername'>DBMANAGERNAME, </if><if test='mask.dbspeakername'>DBSPEAKERNAME, </if><if test='mask.dbdpstatus'>DBDPSTATUS, </if><if test='mask.dbdpc'>DBDPC, </if><if test='mask.dbdpc0'>DBDPC0, </if><if test='mask.dbdpc1'>DBDPC1, </if></trim>FROM F4701View WHERE DBID=#{dbid}</if></when><otherwise>SELECTDBID,DBNAME,DBSTATUS,DBMANAGER,DBSPEAKER,DBORIG,DBCRTIME,DBMANAGERNAME,DBSPEAKERNAME,DBDPSTATUS,DBDPC,DBDPC0,DBDPC1 FROM F4701View WHERE DBID=#{dbid}</otherwise></choose></script>")
-  Database get(@Param("dbid") String dbid, @Param("mask") DatabaseMask mask);
+  Database get(@Param("dbid") Integer dbid, @Param("mask") DatabaseMask mask);
 
+  @org.apache.ibatis.annotations.SelectKey(
+    statement = "SELECT F4701_DBID.nextval AS dbid FROM DUAL",
+    before = true,
+    resultType = Integer.class,
+    keyColumn = "dbid",
+    keyProperty = "bean.dbid"
+  )
   @Insert(
-      "INSERT INTO F4701 (DBID,DBNAME,DBSTATUS,DBMANAGER,DBSPEAKER,DBORIG,DBCRTIME) VALUES (#{bean.dbid,jdbcType=VARCHAR},#{bean.dbname,jdbcType=VARCHAR},#{bean.dbstatus,jdbcType=SMALLINT},#{bean.dbmanager,jdbcType=INTEGER},#{bean.dbspeaker,jdbcType=INTEGER},#{bean.dborig,jdbcType=INTEGER},#{bean.dbcrtime,jdbcType=TIMESTAMP})")
+      "INSERT INTO F4701 (DBID,DBNAME,DBSTATUS,DBMANAGER,DBSPEAKER,DBORIG,DBCRTIME) VALUES (#{bean.dbid,jdbcType=INTEGER},#{bean.dbname,jdbcType=VARCHAR},#{bean.dbstatus,jdbcType=SMALLINT},#{bean.dbmanager,jdbcType=INTEGER},#{bean.dbspeaker,jdbcType=INTEGER},#{bean.dborig,jdbcType=INTEGER},#{bean.dbcrtime,jdbcType=TIMESTAMP})")
   void add(@Param("bean") Database bean);
 
   @Update(
@@ -30,7 +37,7 @@ public interface DatabaseMapper {
   void update(@Param("bean") Database bean, @Param("mask") DatabaseMask mask);
 
   @Delete("DELETE FROM F4701 WHERE DBID=#{dbid}")
-  boolean delete(String dbid);
+  boolean delete(Integer dbid);
 
   @Delete(
       "<script>DELETE FROM F4701<if test='filter!=null'> WHERE ${filter.toStringOracle()}</if></script>")
@@ -48,6 +55,14 @@ public interface DatabaseMapper {
   @Select(
       "<script>SELECT COUNT(*) FROM F4701View<if test='filter!=null'> WHERE ${filter.toStringOracle()}</if></script>")
   long count(@Param("filter") FilterExpr filter);
+
+  @Select(
+      "<script>SELECT DECODE(MIN(DBID),NULL,${defaultValue}) FROM F4701View<if test='filter!=null'> WHERE ${filter.toStringOracle()}</if></script>")
+  Integer minDbid(@Param("filter") FilterExpr filter, @Param("defaultValue") Integer defaultValue);
+
+  @Select(
+      "<script>SELECT DECODE(MAX(DBID),NULL,${defaultValue}) FROM F4701View<if test='filter!=null'> WHERE ${filter.toStringOracle()}</if></script>")
+  Integer maxDbid(@Param("filter") FilterExpr filter, @Param("defaultValue") Integer defaultValue);
 
   @Select(
       "<script>SELECT DECODE(MIN(DBSTATUS),NULL,${defaultValue}) FROM F4701View<if test='filter!=null'> WHERE ${filter.toStringOracle()}</if></script>")

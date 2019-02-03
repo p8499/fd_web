@@ -77,6 +77,16 @@ public class DiphoneService {
   }
 
   @Transactional(value = "fd_transaction", readOnly = true)
+  public Integer minDpdbid(FilterExpr filter, Integer defaultValue) {
+    return diphoneMapper.minDpdbid(filter, defaultValue);
+  }
+
+  @Transactional(value = "fd_transaction", readOnly = true)
+  public Integer maxDpdbid(FilterExpr filter, Integer defaultValue) {
+    return diphoneMapper.maxDpdbid(filter, defaultValue);
+  }
+
+  @Transactional(value = "fd_transaction", readOnly = true)
   public Integer minDplnid(FilterExpr filter, Integer defaultValue) {
     return diphoneMapper.minDplnid(filter, defaultValue);
   }

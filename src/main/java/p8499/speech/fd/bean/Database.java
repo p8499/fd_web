@@ -12,16 +12,18 @@ public class Database {
 
   //region dbid Database ID
   public static final String FIELD_DBID = "DBID";
-  protected String dbid = null;
-  public static final int CONSTRAINT_DBID_LENGTH_STRING = 10;
+  protected Integer dbid = null;
+  public static final int CONSTRAINT_DBID_LENGTH_INTEGER = 8;
+  public static final int CONSTRAINT_DBID_MIN = -99999999;
+  public static final int CONSTRAINT_DBID_MAX = 99999999;
 
-  @javax.validation.constraints.NotNull(groups = {Insert.class, Update.class})
-  @javax.validation.constraints.Size(max = CONSTRAINT_DBID_LENGTH_STRING)
-  public String getDbid() {
+  @javax.validation.constraints.Null(groups = {Insert.class})
+  @javax.validation.constraints.NotNull(groups = {Update.class})
+  public Integer getDbid() {
     return dbid;
   }
 
-  public Database setDbid(String dbid) {
+  public Database setDbid(Integer dbid) {
     this.dbid = dbid;
     return this;
   }
@@ -232,7 +234,7 @@ public class Database {
   //endregion
 
   public Database(
-      String dbid,
+      Integer dbid,
       String dbname,
       Integer dbstatus,
       Integer dbmanager,

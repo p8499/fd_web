@@ -29,11 +29,11 @@ public interface DiphoneMapper {
     keyProperty = "bean.dpid"
   )
   @Insert(
-      "INSERT INTO F4702 (DPID,DPDBID,DPLNID,DPSTATUS,DPSPEAKER,DPRCTIME) VALUES (#{bean.dpid,jdbcType=INTEGER},#{bean.dpdbid,jdbcType=VARCHAR},#{bean.dplnid,jdbcType=INTEGER},#{bean.dpstatus,jdbcType=SMALLINT},#{bean.dpspeaker,jdbcType=INTEGER},#{bean.dprctime,jdbcType=TIMESTAMP})")
+      "INSERT INTO F4702 (DPID,DPDBID,DPLNID,DPSTATUS,DPSPEAKER,DPRCTIME) VALUES (#{bean.dpid,jdbcType=INTEGER},#{bean.dpdbid,jdbcType=INTEGER},#{bean.dplnid,jdbcType=INTEGER},#{bean.dpstatus,jdbcType=SMALLINT},#{bean.dpspeaker,jdbcType=INTEGER},#{bean.dprctime,jdbcType=TIMESTAMP})")
   void add(@Param("bean") Diphone bean);
 
   @Update(
-      "<script><choose><when test='mask!=null'><if test='mask.dpdbid or mask.dplnid or mask.dpstatus or mask.dpspeaker or mask.dprctime'>UPDATE F4702 <set><if test='mask.dpdbid'>DPDBID=#{bean.dpdbid,jdbcType=VARCHAR}, </if><if test='mask.dplnid'>DPLNID=#{bean.dplnid,jdbcType=INTEGER}, </if><if test='mask.dpstatus'>DPSTATUS=#{bean.dpstatus,jdbcType=SMALLINT}, </if><if test='mask.dpspeaker'>DPSPEAKER=#{bean.dpspeaker,jdbcType=INTEGER}, </if><if test='mask.dprctime'>DPRCTIME=#{bean.dprctime,jdbcType=TIMESTAMP}, </if></set>WHERE DPID=#{bean.dpid}</if></when><otherwise>UPDATE F4702 SET DPDBID=#{bean.dpdbid,jdbcType=VARCHAR}, DPLNID=#{bean.dplnid,jdbcType=INTEGER}, DPSTATUS=#{bean.dpstatus,jdbcType=SMALLINT}, DPSPEAKER=#{bean.dpspeaker,jdbcType=INTEGER}, DPRCTIME=#{bean.dprctime,jdbcType=TIMESTAMP} WHERE DPID=#{bean.dpid}</otherwise></choose></script>")
+      "<script><choose><when test='mask!=null'><if test='mask.dpdbid or mask.dplnid or mask.dpstatus or mask.dpspeaker or mask.dprctime'>UPDATE F4702 <set><if test='mask.dpdbid'>DPDBID=#{bean.dpdbid,jdbcType=INTEGER}, </if><if test='mask.dplnid'>DPLNID=#{bean.dplnid,jdbcType=INTEGER}, </if><if test='mask.dpstatus'>DPSTATUS=#{bean.dpstatus,jdbcType=SMALLINT}, </if><if test='mask.dpspeaker'>DPSPEAKER=#{bean.dpspeaker,jdbcType=INTEGER}, </if><if test='mask.dprctime'>DPRCTIME=#{bean.dprctime,jdbcType=TIMESTAMP}, </if></set>WHERE DPID=#{bean.dpid}</if></when><otherwise>UPDATE F4702 SET DPDBID=#{bean.dpdbid,jdbcType=INTEGER}, DPLNID=#{bean.dplnid,jdbcType=INTEGER}, DPSTATUS=#{bean.dpstatus,jdbcType=SMALLINT}, DPSPEAKER=#{bean.dpspeaker,jdbcType=INTEGER}, DPRCTIME=#{bean.dprctime,jdbcType=TIMESTAMP} WHERE DPID=#{bean.dpid}</otherwise></choose></script>")
   void update(@Param("bean") Diphone bean, @Param("mask") DiphoneMask mask);
 
   @Delete("DELETE FROM F4702 WHERE DPID=#{dpid}")
@@ -63,6 +63,16 @@ public interface DiphoneMapper {
   @Select(
       "<script>SELECT DECODE(MAX(DPID),NULL,${defaultValue}) FROM F4702View<if test='filter!=null'> WHERE ${filter.toStringOracle()}</if></script>")
   Integer maxDpid(@Param("filter") FilterExpr filter, @Param("defaultValue") Integer defaultValue);
+
+  @Select(
+      "<script>SELECT DECODE(MIN(DPDBID),NULL,${defaultValue}) FROM F4702View<if test='filter!=null'> WHERE ${filter.toStringOracle()}</if></script>")
+  Integer minDpdbid(
+      @Param("filter") FilterExpr filter, @Param("defaultValue") Integer defaultValue);
+
+  @Select(
+      "<script>SELECT DECODE(MAX(DPDBID),NULL,${defaultValue}) FROM F4702View<if test='filter!=null'> WHERE ${filter.toStringOracle()}</if></script>")
+  Integer maxDpdbid(
+      @Param("filter") FilterExpr filter, @Param("defaultValue") Integer defaultValue);
 
   @Select(
       "<script>SELECT DECODE(MIN(DPLNID),NULL,${defaultValue}) FROM F4702View<if test='filter!=null'> WHERE ${filter.toStringOracle()}</if></script>")

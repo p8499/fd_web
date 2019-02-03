@@ -31,7 +31,7 @@ public abstract class DatabaseControllerBase {
       HttpSession session,
       HttpServletRequest request,
       HttpServletResponse response,
-      @PathVariable String dbid,
+      @PathVariable Integer dbid,
       @RequestParam(required = false) String mask)
       throws Exception {
     DatabaseMask maskObj =
@@ -46,12 +46,12 @@ public abstract class DatabaseControllerBase {
       HttpSession session,
       HttpServletRequest request,
       HttpServletResponse response,
-      String dbid,
+      Integer dbid,
       DatabaseMask mask)
       throws Exception;
 
   @RequestMapping(
-    value = path + pathKey,
+    value = path,
     method = RequestMethod.POST,
     produces = "application/json;charset=UTF-8"
   )
@@ -59,19 +59,14 @@ public abstract class DatabaseControllerBase {
       HttpSession session,
       HttpServletRequest request,
       HttpServletResponse response,
-      @PathVariable String dbid,
       @RequestBody Database bean)
       throws Exception {
-    onAdd(session, request, response, dbid, bean);
+    onAdd(session, request, response, bean);
     return jackson.writeValueAsString(bean);
   }
 
   protected abstract Database onAdd(
-      HttpSession session,
-      HttpServletRequest request,
-      HttpServletResponse response,
-      String dbid,
-      Database bean)
+      HttpSession session, HttpServletRequest request, HttpServletResponse response, Database bean)
       throws Exception;
 
   @RequestMapping(
@@ -83,7 +78,7 @@ public abstract class DatabaseControllerBase {
       HttpSession session,
       HttpServletRequest request,
       HttpServletResponse response,
-      @PathVariable String dbid,
+      @PathVariable Integer dbid,
       @RequestBody Database bean,
       @RequestParam(required = false) String mask)
       throws Exception {
@@ -99,7 +94,7 @@ public abstract class DatabaseControllerBase {
       HttpSession session,
       HttpServletRequest request,
       HttpServletResponse response,
-      String dbid,
+      Integer dbid,
       Database bean,
       DatabaseMask mask)
       throws Exception;
@@ -113,13 +108,13 @@ public abstract class DatabaseControllerBase {
       HttpSession session,
       HttpServletRequest request,
       HttpServletResponse response,
-      @PathVariable String dbid)
+      @PathVariable Integer dbid)
       throws Exception {
     onDelete(session, request, response, dbid);
   }
 
   protected abstract void onDelete(
-      HttpSession session, HttpServletRequest request, HttpServletResponse response, String dbid)
+      HttpSession session, HttpServletRequest request, HttpServletResponse response, Integer dbid)
       throws Exception;
 
   @RequestMapping(
@@ -183,7 +178,7 @@ public abstract class DatabaseControllerBase {
       HttpSession session,
       HttpServletRequest request,
       HttpServletResponse response,
-      @PathVariable String dbid,
+      @PathVariable Integer dbid,
       @RequestParam(required = true) String name)
       throws Exception {
     InputStream input = inputStream(session, request, response, dbid, name);
@@ -200,7 +195,7 @@ public abstract class DatabaseControllerBase {
       HttpSession session,
       HttpServletRequest request,
       HttpServletResponse response,
-      String dbid,
+      Integer dbid,
       String name)
       throws Exception;
 
@@ -213,7 +208,7 @@ public abstract class DatabaseControllerBase {
       HttpSession session,
       HttpServletRequest request,
       HttpServletResponse response,
-      @PathVariable String dbid,
+      @PathVariable Integer dbid,
       @RequestParam(required = true) String name)
       throws Exception {
     OutputStream output = outputStream(session, request, response, dbid, name);
@@ -227,7 +222,7 @@ public abstract class DatabaseControllerBase {
       HttpSession session,
       HttpServletRequest request,
       HttpServletResponse response,
-      String dbid,
+      Integer dbid,
       String name)
       throws Exception;
 
@@ -240,7 +235,7 @@ public abstract class DatabaseControllerBase {
       HttpSession session,
       HttpServletRequest request,
       HttpServletResponse response,
-      @PathVariable String dbid,
+      @PathVariable Integer dbid,
       @RequestParam(required = true) String name)
       throws Exception {
     onDeleteAttachment(session, request, response, dbid, name);
@@ -250,7 +245,7 @@ public abstract class DatabaseControllerBase {
       HttpSession session,
       HttpServletRequest request,
       HttpServletResponse response,
-      String dbid,
+      Integer dbid,
       String name)
       throws Exception;
 
@@ -263,14 +258,14 @@ public abstract class DatabaseControllerBase {
       HttpSession session,
       HttpServletRequest request,
       HttpServletResponse response,
-      @PathVariable String dbid)
+      @PathVariable Integer dbid)
       throws Exception {
     List<String> result = onListAttachments(session, request, response, dbid);
     return jackson.writeValueAsString(result);
   }
 
   protected abstract List<String> onListAttachments(
-      HttpSession session, HttpServletRequest request, HttpServletResponse response, String dbid)
+      HttpSession session, HttpServletRequest request, HttpServletResponse response, Integer dbid)
       throws Exception;
 
   @Value(value = "#{jackson}")

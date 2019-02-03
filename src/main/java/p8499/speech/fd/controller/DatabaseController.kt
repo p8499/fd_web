@@ -27,30 +27,28 @@ import javax.servlet.http.HttpSession
  */
 @RestController
 class DatabaseController : DatabaseControllerBase() {
-    override fun onGet(session: HttpSession, request: HttpServletRequest, response: HttpServletResponse, dbid: String?, mask: DatabaseMask?): Database? {
+    override fun onGet(session: HttpSession, request: HttpServletRequest, response: HttpServletResponse, dbid: Int?, mask: DatabaseMask?): Database? {
         return databaseService.get(dbid, mask) ?: run { response.status = HttpServletResponse.SC_NOT_FOUND; return null }
     }
 
-    override fun onAdd(session: HttpSession, request: HttpServletRequest, response: HttpServletResponse, dbid: String?, bean: Database?): Database? {
-        dbid ?: run { response.status = HttpServletResponse.SC_FORBIDDEN; return null }
-        bean ?: run { response.status = HttpServletResponse.SC_FORBIDDEN; return null }
+    override fun onAdd(session: HttpSession, request: HttpServletRequest, response: HttpServletResponse, bean: Database?): Database? {
+       bean ?: run { response.status = HttpServletResponse.SC_FORBIDDEN; return null }
         val usid = session.usid ?: run { response.status = HttpServletResponse.SC_FORBIDDEN; return null }
         roleAuthorityService.check(usid, Authority.AUID_DATABASE).takeIf { it } ?: run { response.status = HttpServletResponse.SC_FORBIDDEN; return null }
         return databaseService.add(bean
-                .setDbid(dbid)
                 .setDbstatus(Database.DBSTATUS_INITIALIZED)
                 .setDbmanager(usid)
                 .setDborig(usid)
                 .setDbcrtime(Date())) ?: run { response.status = HttpServletResponse.SC_BAD_REQUEST; return null }
     }
 
-    override fun onUpdate(session: HttpSession, request: HttpServletRequest, response: HttpServletResponse, dbid: String?, bean: Database?, mask: DatabaseMask?): Database? {
+    override fun onUpdate(session: HttpSession, request: HttpServletRequest, response: HttpServletResponse, dbid: Int?, bean: Database?, mask: DatabaseMask?): Database? {
         response.status = HttpServletResponse.SC_FORBIDDEN
         return null
     }
 
     @RequestMapping(value = [(path + pathKey + "/rename/")], method = [(RequestMethod.PUT)], produces = ["application/json;charset=UTF-8"])
-    fun rename(session: HttpSession, request: HttpServletRequest, response: HttpServletResponse, @PathVariable dbid: String?, @RequestParam dbname: String?): Database? {
+    fun rename(session: HttpSession, request: HttpServletRequest, response: HttpServletResponse, @PathVariable dbid: Int?, @RequestParam dbname: String?): Database? {
         session.isSigned.takeIf { it } ?: run { response.status = HttpServletResponse.SC_FORBIDDEN; return null }
         dbid ?: run { response.status = HttpServletResponse.SC_BAD_REQUEST; return null }
         val target = databaseService.get(dbid, DatabaseMask().setDbmanager(true)) ?: run { response.status = HttpServletResponse.SC_BAD_REQUEST; return null }
@@ -59,7 +57,7 @@ class DatabaseController : DatabaseControllerBase() {
     }
 
     @RequestMapping(value = [(path + pathKey + "/handover/")], method = [(RequestMethod.PUT)], produces = ["application/json;charset=UTF-8"])
-    fun handover(session: HttpSession, request: HttpServletRequest, response: HttpServletResponse, @PathVariable dbid: String?, @RequestParam usalias: String?, @RequestParam usfrom: String?): Database? {
+    fun handover(session: HttpSession, request: HttpServletRequest, response: HttpServletResponse, @PathVariable dbid: Int?, @RequestParam usalias: String?, @RequestParam usfrom: String?): Database? {
         session.isSigned.takeIf { it } ?: run { response.status = HttpServletResponse.SC_FORBIDDEN; return null }
         dbid ?: run { response.status = HttpServletResponse.SC_BAD_REQUEST; return null }
         usalias ?: run { response.status = HttpServletResponse.SC_BAD_REQUEST; return null }
@@ -71,7 +69,7 @@ class DatabaseController : DatabaseControllerBase() {
     }
 
     @RequestMapping(value = [(path + pathKey + "/assign/")], method = [(RequestMethod.PUT)], produces = ["application/json;charset=UTF-8"])
-    fun assign(session: HttpSession, request: HttpServletRequest, response: HttpServletResponse, @PathVariable dbid: String?, @RequestParam usalias: String?, @RequestParam usfrom: String?): Database? {
+    fun assign(session: HttpSession, request: HttpServletRequest, response: HttpServletResponse, @PathVariable dbid: Int?, @RequestParam usalias: String?, @RequestParam usfrom: String?): Database? {
         session.isSigned.takeIf { it } ?: run { response.status = HttpServletResponse.SC_FORBIDDEN; return null }
         dbid ?: run { response.status = HttpServletResponse.SC_BAD_REQUEST; return null }
         usalias ?: run { response.status = HttpServletResponse.SC_BAD_REQUEST; return null }
@@ -83,15 +81,15 @@ class DatabaseController : DatabaseControllerBase() {
     }
 
     @RequestMapping(value = [(path + pathKey + "/promote/")], method = [(RequestMethod.PUT)], produces = ["application/json;charset=UTF-8"])
-    fun promote(session: HttpSession, request: HttpServletRequest, response: HttpServletResponse, @PathVariable dbid: String?): Database? {
+    fun promote(session: HttpSession, request: HttpServletRequest, response: HttpServletResponse, @PathVariable dbid: Int?): Database? {
         session.isSigned.takeIf { it } ?: run { response.status = HttpServletResponse.SC_FORBIDDEN; return null }
         dbid ?: run { response.status = HttpServletResponse.SC_BAD_REQUEST; return null }
         val target = databaseService.get(dbid, DatabaseMask().setDbmanager(true)) ?: run { response.status = HttpServletResponse.SC_BAD_REQUEST; return null }
         (target.dbmanager == session.usid).takeIf { it } ?: run { response.status = HttpServletResponse.SC_FORBIDDEN; return null }
         return when (target.dbstatus) {
             Database.DBSTATUS_INITIALIZED -> {
-                diphoneService.count(FilterLogicExpr().equalsString(Diphone.FIELD_DPDBID, dbid)).takeIf { it > 0L } ?: run { response.status = HttpServletResponse.SC_BAD_REQUEST; return null }
-                diphoneService.count(FilterLogicExpr().equalsString(Diphone.FIELD_DPDBID, dbid).append(FilterLogicExpr().equalsNumber(Diphone.FIELD_DPSTATUS, Diphone.DPSTATUS_RECORDED).not())).takeIf { it == 0L } ?: run { response.status = HttpServletResponse.SC_BAD_REQUEST; return null }
+                diphoneService.count(FilterLogicExpr().equalsNumber(Diphone.FIELD_DPDBID, dbid)).takeIf { it > 0L } ?: run { response.status = HttpServletResponse.SC_BAD_REQUEST; return null }
+                diphoneService.count(FilterLogicExpr().equalsNumber(Diphone.FIELD_DPDBID, dbid).append(FilterLogicExpr().equalsNumber(Diphone.FIELD_DPSTATUS, Diphone.DPSTATUS_RECORDED).not())).takeIf { it == 0L } ?: run { response.status = HttpServletResponse.SC_BAD_REQUEST; return null }
                 databaseService.update(target.setDbstatus(Database.DBSTATUS_DIPHONES_PREPARED), DatabaseMask().setDbstatus(true)) ?: run { response.status = HttpServletResponse.SC_BAD_REQUEST; return null }
             }
             Database.DBSTATUS_DIPHONES_PREPARED -> databaseService.update(target.setDbstatus(Database.DBSTATUS_BUILD_PENDING), DatabaseMask().setDbstatus(true)) ?: run { response.status = HttpServletResponse.SC_BAD_REQUEST; return null }
@@ -100,7 +98,7 @@ class DatabaseController : DatabaseControllerBase() {
     }
 
     @RequestMapping(value = [(path + pathKey + "/demote/")], method = [(RequestMethod.PUT)], produces = ["application/json;charset=UTF-8"])
-    fun demote(session: HttpSession, request: HttpServletRequest, response: HttpServletResponse, @PathVariable dbid: String?): Database? {
+    fun demote(session: HttpSession, request: HttpServletRequest, response: HttpServletResponse, @PathVariable dbid: Int?): Database? {
         session.isSigned.takeIf { it } ?: run { response.status = HttpServletResponse.SC_FORBIDDEN; return null }
         dbid ?: run { response.status = HttpServletResponse.SC_BAD_REQUEST; return null }
         val target = databaseService.get(dbid, DatabaseMask().setDbmanager(true)) ?: run { response.status = HttpServletResponse.SC_BAD_REQUEST; return null }
@@ -112,7 +110,7 @@ class DatabaseController : DatabaseControllerBase() {
         }
     }
 
-    override fun onDelete(session: HttpSession, request: HttpServletRequest, response: HttpServletResponse, dbid: String?) {
+    override fun onDelete(session: HttpSession, request: HttpServletRequest, response: HttpServletResponse, dbid: Int?) {
         //after all the statuses are designed
         TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
     }
@@ -125,11 +123,11 @@ class DatabaseController : DatabaseControllerBase() {
         return databaseService.query(filter, orderByList, start, count, mask)
     }
 
-    override fun inputStream(session: HttpSession, request: HttpServletRequest, response: HttpServletResponse, dbid: String?, name: String?): InputStream? {
+    override fun inputStream(session: HttpSession, request: HttpServletRequest, response: HttpServletResponse, dbid: Int?, name: String?): InputStream? {
         return File(session.servletContext.getRealPath("$attachmentFolder/${Database.NAME}/$dbid/$name")).takeIf { it.exists() }?.inputStream() ?: run { response.status = HttpServletResponse.SC_NOT_FOUND; return null }
     }
 
-    override fun outputStream(session: HttpSession, request: HttpServletRequest, response: HttpServletResponse, dbid: String?, name: String?): OutputStream? {
+    override fun outputStream(session: HttpSession, request: HttpServletRequest, response: HttpServletResponse, dbid: Int?, name: String?): OutputStream? {
         session.isSigned.takeIf { it } ?: run { response.status = HttpServletResponse.SC_FORBIDDEN; return null }
         dbid ?: run { response.status = HttpServletResponse.SC_BAD_REQUEST; return null }
         val target = databaseService.get(dbid, DatabaseMask().setDbmanager(true)) ?: run { response.status = HttpServletResponse.SC_BAD_REQUEST; return null }
@@ -144,7 +142,7 @@ class DatabaseController : DatabaseControllerBase() {
         }
     }
 
-    override fun onDeleteAttachment(session: HttpSession, request: HttpServletRequest, response: HttpServletResponse, dbid: String?, name: String?) {
+    override fun onDeleteAttachment(session: HttpSession, request: HttpServletRequest, response: HttpServletResponse, dbid: Int?, name: String?) {
         session.isSigned.takeIf { it } ?: run { response.status = HttpServletResponse.SC_FORBIDDEN; return }
         dbid ?: run { response.status = HttpServletResponse.SC_BAD_REQUEST; return }
         val target = databaseService.get(dbid, DatabaseMask().setDbmanager(true)) ?: run { response.status = HttpServletResponse.SC_BAD_REQUEST; return }
@@ -156,7 +154,7 @@ class DatabaseController : DatabaseControllerBase() {
         }
     }
 
-    override fun onListAttachments(session: HttpSession, request: HttpServletRequest, response: HttpServletResponse, dbid: String?): MutableList<String>? {
+    override fun onListAttachments(session: HttpSession, request: HttpServletRequest, response: HttpServletResponse, dbid: Int?): MutableList<String>? {
         return File(session.servletContext.getRealPath("$attachmentFolder/${Database.NAME}/$dbid")).takeIf { it.exists() }?.list()?.toMutableList()
     }
 

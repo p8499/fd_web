@@ -31,16 +31,19 @@ public class Diphone {
 
   //region dpdbid Database ID
   public static final String FIELD_DPDBID = "DPDBID";
-  protected String dpdbid = null;
-  public static final int CONSTRAINT_DPDBID_LENGTH_STRING = 10;
+  protected Integer dpdbid = null;
+  public static final int CONSTRAINT_DPDBID_LENGTH_INTEGER = 8;
+  public static final int CONSTRAINT_DPDBID_MIN = -99999999;
+  public static final int CONSTRAINT_DPDBID_MAX = 99999999;
 
   @javax.validation.constraints.NotNull(groups = {Insert.class, Update.class})
-  @javax.validation.constraints.Size(max = CONSTRAINT_DPDBID_LENGTH_STRING)
-  public String getDpdbid() {
+  @javax.validation.constraints.Min(value = CONSTRAINT_DPDBID_MIN)
+  @javax.validation.constraints.Max(value = CONSTRAINT_DPDBID_MAX)
+  public Integer getDpdbid() {
     return dpdbid;
   }
 
-  public Diphone setDpdbid(String dpdbid) {
+  public Diphone setDpdbid(Integer dpdbid) {
     this.dpdbid = dpdbid;
     return this;
   }
@@ -141,7 +144,7 @@ public class Diphone {
 
   public Diphone(
       Integer dpid,
-      String dpdbid,
+      Integer dpdbid,
       Integer dplnid,
       Integer dpstatus,
       Integer dpspeaker,
