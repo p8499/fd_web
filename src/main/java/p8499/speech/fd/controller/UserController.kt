@@ -76,14 +76,15 @@ class UserController : UserControllerBase() {
         usalias ?: run { response.status = HttpServletResponse.SC_FORBIDDEN; return }
         usfrom ?: run { response.status = HttpServletResponse.SC_FORBIDDEN; return }
         uspswd ?: run { response.status = HttpServletResponse.SC_FORBIDDEN; return }
-        val user = userService.get(usalias, usfrom, UserMask().setUsid(true).setUspswd(true)) ?: run { response.status = HttpServletResponse.SC_FORBIDDEN; return }
+        val user = userService[usalias, usfrom, UserMask().setUsid(true).setUspswd(true)] ?: run { response.status = HttpServletResponse.SC_FORBIDDEN; return }
         user.uspswd.takeIf { it == DigestUtils.md5Hex(uspswd) } ?: run { response.status = HttpServletResponse.SC_FORBIDDEN; return }
         session.setAttribute("usid", user.usid)
     }
 
     @RequestMapping(value = [(path + "status/")], method = [(RequestMethod.GET)], produces = ["application/json;charset=UTF-8"])
-    fun status(session: HttpSession, request: HttpServletRequest, response: HttpServletResponse) {
-        session.getAttribute("usid") ?: run { response.status = HttpServletResponse.SC_NO_CONTENT; return }
+    fun status(session: HttpSession, request: HttpServletRequest, response: HttpServletResponse): User? {
+        val usid = session.usid ?: run { response.status = HttpServletResponse.SC_NO_CONTENT; return null }
+        return userService[usid, UserMask().setUsalias(true).setUsfrom(true)].setUsid(null) ?: run { response.status = HttpServletResponse.SC_INTERNAL_SERVER_ERROR; return null }
     }
 
     @RequestMapping(value = [(path + "auth")], method = [(RequestMethod.GET)], produces = ["application/json;charset=UTF-8"])

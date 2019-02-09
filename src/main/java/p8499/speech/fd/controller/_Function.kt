@@ -15,7 +15,7 @@ import javax.servlet.http.HttpSession
 val HttpSession.isSigned: Boolean get() = usid != null
 val HttpSession.usid: Int? get() = getAttribute("usid") as? Int?
 
-fun UserService.get(usalias: String, usfrom: String, mask: UserMask): User? = query(FilterLogicExpr().equalsString(User.FIELD_USALIAS, usalias).equalsString(User.FIELD_USFROM, usfrom), null, 0, 1, mask)?.takeUnless { it.isEmpty() }?.get(0)
+operator fun UserService.get(usalias: String, usfrom: String, mask: UserMask): User? = query(FilterLogicExpr().equalsString(User.FIELD_USALIAS, usalias).equalsString(User.FIELD_USFROM, usfrom), null, 0, 1, mask)?.takeUnless { it.isEmpty() }?.get(0)
 
 fun RoleAuthorityService.check(usid: Int, auid: String): Boolean = count(
         FilterLogicExpr().equalsString(RoleAuthority.FIELD_RAAUID, auid).existsObject(
