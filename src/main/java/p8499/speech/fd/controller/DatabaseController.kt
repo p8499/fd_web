@@ -32,7 +32,7 @@ class DatabaseController : DatabaseControllerBase() {
     }
 
     override fun onAdd(session: HttpSession, request: HttpServletRequest, response: HttpServletResponse, bean: Database?): Database? {
-       bean ?: run { response.status = HttpServletResponse.SC_FORBIDDEN; return null }
+        bean ?: run { response.status = HttpServletResponse.SC_FORBIDDEN; return null }
         val usid = session.usid ?: run { response.status = HttpServletResponse.SC_FORBIDDEN; return null }
         roleAuthorityService.check(usid, Authority.AUID_DATABASE).takeIf { it } ?: run { response.status = HttpServletResponse.SC_FORBIDDEN; return null }
         return databaseService.add(bean

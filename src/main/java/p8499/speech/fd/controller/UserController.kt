@@ -1,6 +1,7 @@
 package p8499.speech.fd.controller
 
 import org.apache.commons.codec.digest.DigestUtils
+import org.springframework.beans.factory.annotation.Value
 import org.springframework.web.bind.annotation.RequestMapping
 import org.springframework.web.bind.annotation.RequestMethod
 import org.springframework.web.bind.annotation.RequestParam
@@ -10,6 +11,7 @@ import p8499.speech.fd.OrderByListExpr
 import p8499.speech.fd.bean.User
 import p8499.speech.fd.controller.base.UserControllerBase
 import p8499.speech.fd.mask.UserMask
+import p8499.speech.fd.service.RoleAuthorityService
 import java.io.InputStream
 import java.io.OutputStream
 import javax.servlet.http.HttpServletRequest
@@ -84,9 +86,21 @@ class UserController : UserControllerBase() {
         session.getAttribute("usid") ?: run { response.status = HttpServletResponse.SC_NO_CONTENT; return }
     }
 
+    @RequestMapping(value = [(path + "auth")], method = [(RequestMethod.GET)], produces = ["application/json;charset=UTF-8"])
+    fun auth(session: HttpSession, request: HttpServletRequest, response: HttpServletResponse, @RequestParam auid: String?) {
+        auid ?: run { response.status = HttpServletResponse.SC_BAD_REQUEST; return }
+        val usid = session.usid ?: run { response.status = HttpServletResponse.SC_FORBIDDEN; return }
+        roleAuthorityService.check(usid, auid).takeIf { it } ?: run { response.status = HttpServletResponse.SC_FORBIDDEN; return }
+        response.status = HttpServletResponse.SC_OK
+    }
+
     @RequestMapping(value = [(path + "signout/")], method = [(RequestMethod.GET)], produces = ["application/json;charset=UTF-8"])
     fun signout(session: HttpSession, request: HttpServletRequest, response: HttpServletResponse) {
-        session.getAttribute("usid") ?: run { response.status = HttpServletResponse.SC_NO_CONTENT; return }
+        session.usid ?: run { response.status = HttpServletResponse.SC_NO_CONTENT; return }
         session.removeAttribute("usid")
     }
+
+    @Value(value = "#{roleAuthorityService}")
+    protected lateinit var roleAuthorityService: RoleAuthorityService
+
 }
