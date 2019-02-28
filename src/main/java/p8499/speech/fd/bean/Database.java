@@ -143,6 +143,36 @@ public class Database {
   }
   //endregion
 
+  //region dbmanageralias Database Manager Alias
+  public static final String FIELD_DBMANAGERALIAS = "DBMANAGERALIAS";
+  protected String dbmanageralias = null;
+
+  @javax.validation.constraints.Null(groups = {Insert.class, Update.class})
+  public String getDbmanageralias() {
+    return dbmanageralias;
+  }
+
+  public Database setDbmanageralias(String dbmanageralias) {
+    this.dbmanageralias = dbmanageralias;
+    return this;
+  }
+  //endregion
+
+  //region dbmanagerfrom Database Manager From
+  public static final String FIELD_DBMANAGERFROM = "DBMANAGERFROM";
+  protected String dbmanagerfrom = null;
+
+  @javax.validation.constraints.Null(groups = {Insert.class, Update.class})
+  public String getDbmanagerfrom() {
+    return dbmanagerfrom;
+  }
+
+  public Database setDbmanagerfrom(String dbmanagerfrom) {
+    this.dbmanagerfrom = dbmanagerfrom;
+    return this;
+  }
+  //endregion
+
   //region dbmanagername Database Manager Name
   public static final String FIELD_DBMANAGERNAME = "DBMANAGERNAME";
   protected String dbmanagername = null;
@@ -154,6 +184,36 @@ public class Database {
 
   public Database setDbmanagername(String dbmanagername) {
     this.dbmanagername = dbmanagername;
+    return this;
+  }
+  //endregion
+
+  //region dbspeakeralias Database Speaker Alias
+  public static final String FIELD_DBSPEAKERALIAS = "DBSPEAKERALIAS";
+  protected String dbspeakeralias = null;
+
+  @javax.validation.constraints.Null(groups = {Insert.class, Update.class})
+  public String getDbspeakeralias() {
+    return dbspeakeralias;
+  }
+
+  public Database setDbspeakeralias(String dbspeakeralias) {
+    this.dbspeakeralias = dbspeakeralias;
+    return this;
+  }
+  //endregion
+
+  //region dbspeakerfrom Database Speaker From
+  public static final String FIELD_DBSPEAKERFROM = "DBSPEAKERFROM";
+  protected String dbspeakerfrom = null;
+
+  @javax.validation.constraints.Null(groups = {Insert.class, Update.class})
+  public String getDbspeakerfrom() {
+    return dbspeakerfrom;
+  }
+
+  public Database setDbspeakerfrom(String dbspeakerfrom) {
+    this.dbspeakerfrom = dbspeakerfrom;
     return this;
   }
   //endregion
@@ -241,7 +301,11 @@ public class Database {
       Integer dbspeaker,
       Integer dborig,
       java.util.Date dbcrtime,
+      String dbmanageralias,
+      String dbmanagerfrom,
       String dbmanagername,
+      String dbspeakeralias,
+      String dbspeakerfrom,
       String dbspeakername,
       Integer dbdpstatus,
       Integer dbdpc,
@@ -254,7 +318,11 @@ public class Database {
     if (dbspeaker != null) this.dbspeaker = dbspeaker;
     if (dborig != null) this.dborig = dborig;
     if (dbcrtime != null) this.dbcrtime = dbcrtime;
+    if (dbmanageralias != null) this.dbmanageralias = dbmanageralias;
+    if (dbmanagerfrom != null) this.dbmanagerfrom = dbmanagerfrom;
     if (dbmanagername != null) this.dbmanagername = dbmanagername;
+    if (dbspeakeralias != null) this.dbspeakeralias = dbspeakeralias;
+    if (dbspeakerfrom != null) this.dbspeakerfrom = dbspeakerfrom;
     if (dbspeakername != null) this.dbspeakername = dbspeakername;
     if (dbdpstatus != null) this.dbdpstatus = dbdpstatus;
     if (dbdpc != null) this.dbdpc = dbdpc;
@@ -263,7 +331,9 @@ public class Database {
   }
 
   public Database() {
-    this(null, null, null, null, null, null, null, null, null, null, null, null, null);
+    this(
+        null, null, null, null, null, null, null, null, null, null, null, null, null, null, null,
+        null, null);
   }
 
   public Database clone() {
@@ -275,7 +345,11 @@ public class Database {
         dbspeaker,
         dborig,
         dbcrtime,
+        dbmanageralias,
+        dbmanagerfrom,
         dbmanagername,
+        dbspeakeralias,
+        dbspeakerfrom,
         dbspeakername,
         dbdpstatus,
         dbdpc,

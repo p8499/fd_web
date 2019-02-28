@@ -158,6 +158,11 @@ class DatabaseController : DatabaseControllerBase() {
         return File(session.servletContext.getRealPath("$attachmentFolder/${Database.NAME}/$dbid")).takeIf { it.exists() }?.list()?.toMutableList()
     }
 
+    @RequestMapping(value = [(attachmentPath + pathKey + "/md5/")], method = [(RequestMethod.GET)], produces = ["application/json;charset=UTF-8"])
+    fun md5(session: HttpSession, request: HttpServletRequest, response: HttpServletResponse, @PathVariable dbid: Int?, @RequestParam name: String?): String? {
+        return File(session.servletContext.getRealPath("$attachmentFolder/${Database.NAME}/$dbid/$name")).takeIf { it.exists() }?.md5 ?: run { response.status = HttpServletResponse.SC_NOT_FOUND; return null }
+    }
+
     @Value(value = "\${app.attachmentFolder}")
     protected lateinit var attachmentFolder: String
     @Value(value = "#{roleAuthorityService}")

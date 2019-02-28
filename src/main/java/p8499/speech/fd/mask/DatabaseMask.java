@@ -87,6 +87,28 @@ public class DatabaseMask implements Mask<DatabaseMask> {
     return this;
   }
 
+  protected boolean dbmanageralias = false;
+
+  public boolean getDbmanageralias() {
+    return dbmanageralias;
+  }
+
+  public DatabaseMask setDbmanageralias(boolean dbmanageralias) {
+    this.dbmanageralias = dbmanageralias;
+    return this;
+  }
+
+  protected boolean dbmanagerfrom = false;
+
+  public boolean getDbmanagerfrom() {
+    return dbmanagerfrom;
+  }
+
+  public DatabaseMask setDbmanagerfrom(boolean dbmanagerfrom) {
+    this.dbmanagerfrom = dbmanagerfrom;
+    return this;
+  }
+
   protected boolean dbmanagername = false;
 
   public boolean getDbmanagername() {
@@ -95,6 +117,28 @@ public class DatabaseMask implements Mask<DatabaseMask> {
 
   public DatabaseMask setDbmanagername(boolean dbmanagername) {
     this.dbmanagername = dbmanagername;
+    return this;
+  }
+
+  protected boolean dbspeakeralias = false;
+
+  public boolean getDbspeakeralias() {
+    return dbspeakeralias;
+  }
+
+  public DatabaseMask setDbspeakeralias(boolean dbspeakeralias) {
+    this.dbspeakeralias = dbspeakeralias;
+    return this;
+  }
+
+  protected boolean dbspeakerfrom = false;
+
+  public boolean getDbspeakerfrom() {
+    return dbspeakerfrom;
+  }
+
+  public DatabaseMask setDbspeakerfrom(boolean dbspeakerfrom) {
+    this.dbspeakerfrom = dbspeakerfrom;
     return this;
   }
 
@@ -161,7 +205,11 @@ public class DatabaseMask implements Mask<DatabaseMask> {
       boolean dbspeaker,
       boolean dborig,
       boolean dbcrtime,
+      boolean dbmanageralias,
+      boolean dbmanagerfrom,
       boolean dbmanagername,
+      boolean dbspeakeralias,
+      boolean dbspeakerfrom,
       boolean dbspeakername,
       boolean dbdpstatus,
       boolean dbdpc,
@@ -174,7 +222,11 @@ public class DatabaseMask implements Mask<DatabaseMask> {
     this.dbspeaker = dbspeaker;
     this.dborig = dborig;
     this.dbcrtime = dbcrtime;
+    this.dbmanageralias = dbmanageralias;
+    this.dbmanagerfrom = dbmanagerfrom;
     this.dbmanagername = dbmanagername;
+    this.dbspeakeralias = dbspeakeralias;
+    this.dbspeakerfrom = dbspeakerfrom;
     this.dbspeakername = dbspeakername;
     this.dbdpstatus = dbdpstatus;
     this.dbdpc = dbdpc;
@@ -193,7 +245,11 @@ public class DatabaseMask implements Mask<DatabaseMask> {
     this.dbspeaker = b;
     this.dborig = b;
     this.dbcrtime = b;
+    this.dbmanageralias = b;
+    this.dbmanagerfrom = b;
     this.dbmanagername = b;
+    this.dbspeakeralias = b;
+    this.dbspeakerfrom = b;
     this.dbspeakername = b;
     this.dbdpstatus = b;
     this.dbdpc = b;
@@ -233,7 +289,11 @@ public class DatabaseMask implements Mask<DatabaseMask> {
 
   @Override
   public DatabaseMask virtuals(boolean b) {
+    this.dbmanageralias = b;
+    this.dbmanagerfrom = b;
     this.dbmanagername = b;
+    this.dbspeakeralias = b;
+    this.dbspeakerfrom = b;
     this.dbspeakername = b;
     this.dbdpstatus = b;
     this.dbdpc = b;
@@ -251,7 +311,11 @@ public class DatabaseMask implements Mask<DatabaseMask> {
     else if (p.equals("dbspeaker")) return dbspeaker;
     else if (p.equals("dborig")) return dborig;
     else if (p.equals("dbcrtime")) return dbcrtime;
+    else if (p.equals("dbmanageralias")) return dbmanageralias;
+    else if (p.equals("dbmanagerfrom")) return dbmanagerfrom;
     else if (p.equals("dbmanagername")) return dbmanagername;
+    else if (p.equals("dbspeakeralias")) return dbspeakeralias;
+    else if (p.equals("dbspeakerfrom")) return dbspeakerfrom;
     else if (p.equals("dbspeakername")) return dbspeakername;
     else if (p.equals("dbdpstatus")) return dbdpstatus;
     else if (p.equals("dbdpc")) return dbdpc;
@@ -269,7 +333,11 @@ public class DatabaseMask implements Mask<DatabaseMask> {
     else if (p.equals("dbspeaker")) this.dbspeaker = b;
     else if (p.equals("dborig")) this.dborig = b;
     else if (p.equals("dbcrtime")) this.dbcrtime = b;
+    else if (p.equals("dbmanageralias")) this.dbmanageralias = b;
+    else if (p.equals("dbmanagerfrom")) this.dbmanagerfrom = b;
     else if (p.equals("dbmanagername")) this.dbmanagername = b;
+    else if (p.equals("dbspeakeralias")) this.dbspeakeralias = b;
+    else if (p.equals("dbspeakerfrom")) this.dbspeakerfrom = b;
     else if (p.equals("dbspeakername")) this.dbspeakername = b;
     else if (p.equals("dbdpstatus")) this.dbdpstatus = b;
     else if (p.equals("dbdpc")) this.dbdpc = b;
@@ -311,9 +379,25 @@ public class DatabaseMask implements Mask<DatabaseMask> {
         gen.writeFieldName("dbcrtime");
         gen.writeBoolean(value.getDbcrtime());
       }
+      if (value.getDbmanageralias()) {
+        gen.writeFieldName("dbmanageralias");
+        gen.writeBoolean(value.getDbmanageralias());
+      }
+      if (value.getDbmanagerfrom()) {
+        gen.writeFieldName("dbmanagerfrom");
+        gen.writeBoolean(value.getDbmanagerfrom());
+      }
       if (value.getDbmanagername()) {
         gen.writeFieldName("dbmanagername");
         gen.writeBoolean(value.getDbmanagername());
+      }
+      if (value.getDbspeakeralias()) {
+        gen.writeFieldName("dbspeakeralias");
+        gen.writeBoolean(value.getDbspeakeralias());
+      }
+      if (value.getDbspeakerfrom()) {
+        gen.writeFieldName("dbspeakerfrom");
+        gen.writeBoolean(value.getDbspeakerfrom());
       }
       if (value.getDbspeakername()) {
         gen.writeFieldName("dbspeakername");
